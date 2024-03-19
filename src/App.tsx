@@ -1,25 +1,60 @@
-import { Button, Flex, Select, Text } from "@radix-ui/themes";
+import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
+import { Toaster, toast } from "sonner";
 import { downloadFileTypes } from "./utils/data";
-
 function App() {
-  const [selectedResolution, setSelectedResolution] = useState<string>(downloadFileTypes[0].value);
+  const [downloadType, setDownloadType] = useState<Number>(0);
+  const [url, setUrl] = useState<String>("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setUrl(value);
+  };
+  console.log(downloadType);
+  console.log(url);
   return (
-<>
-    <Flex direction="column" gap="2" justify={"center"} align={"center"} className="h-screen flex items-center justify-center">
-      <Text>Hello from Radix Themes :)</Text>
-      <Button>Let's go</Button>
-      <Select.Root defaultValue={downloadFileTypes[0].value}>
-        <Select.Trigger />
-        <Select.Content position="popper">
-          {downloadFileTypes.map((e,i) => (
-            <Select.Item onClick={() => setSelectedResolution(e.value)} key={i} value={e.value}>{ e.label }</Select.Item>
-          ))}
-        </Select.Content>
-      </Select.Root>
-      <Text>{ selectedResolution }</Text>
-    </Flex>
-</>
+    <div className="h-screen flex items-center justify-center ">
+      <div className="grid gap-y-8">
+        <Input
+          variant="underlined"
+          size="lg"
+          type="url"
+          label="Enter Youtube URL"
+          className="w-96"
+          color="primary"
+          onChange={handleChange}
+        />
+        <div className="flex justify-between gap-x-4 items-center">
+          <Select
+            label="Select Type"
+            className="max-w-lg "
+            size="sm"
+            isRequired
+          >
+            {downloadFileTypes.map((_) => (
+              <SelectItem
+                key={_.value}
+                value={_.value}
+                onClick={() => setDownloadType(_.id)}
+                className=""
+              >
+                {_.label}
+              </SelectItem>
+            ))}
+          </Select>
+
+          <Button
+            size="lg"
+            color="primary"
+            radius="sm"
+            variant="ghost"
+            onClick={() => toast.info("Processing")}
+          >
+            Download
+          </Button>
+        </div>
+      </div>
+      <Toaster/>
+    </div>
   );
 }
 
